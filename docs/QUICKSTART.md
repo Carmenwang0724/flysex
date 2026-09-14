@@ -59,6 +59,16 @@ This samples every fifth decoded video frame. The numeric part after `frame_` is
 
 ## 3. Configure and verify alignment
 
+For the original July 14 snapshot export, place the existing session folder at `data/07142026/` and use the supplied `configs/july14_preview.json`. Run:
+
+```bash
+python -m flysex predict --config configs/july14_preview.json
+```
+
+This preview processes five stills each from wells 2 and 6. Its `frame_zero: 54647` was checked against that original export. It is not a default for other trials or newly generated tracker tables. The raw session data is supplied separately from the repository.
+
+For a different trial, follow the configuration steps below.
+
 Copy `configs/example.json` to `configs/local_trial.json`. Edit:
 
 | Setting | What to enter |

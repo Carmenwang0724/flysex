@@ -1,0 +1,39 @@
+{
+  "session_directory": "../data/07142026",
+  "model_directory": "../model",
+  "output_directory": "../results/july14-preview",
+  "wells": [
+    2,
+    6
+  ],
+  "frame_zero": 54647,
+  "max_frames": 5,
+  "device": "auto",
+  "seed": 0,
+  "well_origins": {
+    "1": [
+      260,
+      171
+    ],
+    "2": [
+      832,
+      163
+    ],
+    "3": [
+      1402,
+      171
+    ],
+    "4": [
+      267,
+      748
+    ],
+    "5": [
+      824,
+      748
+    ],
+    "6": [
+      1387,
+      733
+    ]
+  }
+}

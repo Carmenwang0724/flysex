@@ -92,6 +92,13 @@ recording. Review score/annotation disagreements visually before revising labels
 The notebook structure remains at 17, 20, and 26 cells respectively. Saved outputs
 and execution counts are cleared.
 
+The later code-style audit reran notebook 01 end to end on one existing complete
+annotation group, exercised notebook 02 training and prediction on one eight-crop
+batch, and reran all of notebook 06. Released model files were preserved. See
+[the verification record](../docs/VERIFICATION.md) for the latest checks.
+
+The checks below describe the original migration:
+
 - Notebook 01: all definitions loaded; workbook parsing, aligned sampling,
   quantisation, still indexing, and calibration reading checked. The workspace
   workbook had zero usable annotated rows, so a full dataset rebuild was not run.

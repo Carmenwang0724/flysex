@@ -24,6 +24,8 @@ python -m flysex predict --config configs/local_trial.json
 
 Start with `max_frames: 5` and inspect the preview crops and position overlays. Confirm both spatial and time alignment before processing the full recording. The [quickstart](docs/QUICKSTART.md) explains the input layout and each step.
 
+For a first run with the original July 14 snapshot export, put that session folder at `data/07142026/` and use `configs/july14_preview.json`. It contains the frame origin checked for that specific export and processes five stills each from wells 2 and 6. Other recordings or regenerated tracker exports need their own verified configuration.
+
 Once the scores have been reviewed, export ranked copies of the tracker tables:
 
 ```bash
@@ -74,3 +76,5 @@ python -m pip install -e '.[research,video]'
 ```
 
 Existing weights are sufficient for routine prediction. Retraining is a separate research step that uses annotation labels and evaluation split by recording date.
+
+For code changes, follow [the code style](docs/CODE_STYLE.md). The [verification record](docs/VERIFICATION.md) describes the checks performed before sharing this version.
