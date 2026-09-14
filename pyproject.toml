@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flysex"
+version = "0.1.0"
+description = "Score and rank tracked flies from top-down recording stills"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "Pillow>=10",
+    "torch>=2.1",
+    "torchvision>=0.16",
+]
+
+[project.optional-dependencies]
+research = ["jupyter>=1", "matplotlib>=3.7", "scikit-learn>=1.3", "openpyxl>=3.1"]
+video = ["av>=12"]
+
+[project.scripts]
+flysex = "flysex.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

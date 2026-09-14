@@ -1,0 +1,16 @@
+{
+  "models": [
+    {
+      "file": "flysex_seed0.pt",
+      "bytes": 44761163,
+      "sha256": "7ad213aab2a946f3adac35a562e527cb7308b86aa13d20e9a446c44ef0b3278f"
+    },
+    {
+      "file": "flysex_seed1.pt",
+      "bytes": 44761163,
+      "sha256": "e573816a98b59253e447135342c990631a36f131c81dcddf1493d297cfcfca8a"
+    }
+  ],
+  "preprocessing": "body-axis crops, corrected scale normalization",
+  "validation": "three recording dates; see docs/METHODS.md"
+}
