@@ -14,6 +14,14 @@ python -m pip install -e .
 
 Windows activation is `.venv\Scripts\activate`. Keep both supplied weights in `model/`: `flysex_seed0.pt` and `flysex_seed1.pt`.
 
+Installation is needed only once. Each time you open a new terminal, enter the repository folder and activate the existing environment before running commands:
+
+```bash
+source .venv/bin/activate
+```
+
+This selects the project's Python environment and installed dependencies; it does not run the model.
+
 ## 2. Prepare the trial
 
 A trial needs full-frame stills, the per-fly FlyTracker CSV files for each requested well, and its `calibration.mat`. These layouts are supported:
@@ -69,7 +77,15 @@ This preview processes five stills each from wells 2 and 6. Its `frame_zero: 546
 
 For a different trial, follow the configuration steps below.
 
-Copy `configs/example.json` to `configs/local_trial.json`. Edit:
+Copy `configs/example.json` to `configs/local_trial.json`. On macOS or Linux, run this from the repository root:
+
+```bash
+cp configs/example.json configs/local_trial.json
+```
+
+`cp` copies the example into an editable configuration for this trial. You can instead duplicate and rename the file in your file manager. Use a different name for each trial, such as `local_new_day.json`, and use that same name in the prediction command. Underscores do not need backslashes.
+
+Open the copied JSON file in a text editor and edit:
 
 | Setting | What to enter |
 |---|---|
@@ -139,6 +155,8 @@ Check `run_summary.json` for the run configuration and actual coverage. Skipped 
 ## 6. Export ranked tracker tables
 
 Prediction creates scores and review images. Export is a separate command:
+
+If you need updated FlyTracker CSV copies for downstream analysis, complete this step after reviewing the predictions. Prediction alone does not write reordered tracker files. Export changes the per-frame order in new copies; it does not update an external analysis program or establish continuous individual identities.
 
 ```bash
 python -m flysex export \
