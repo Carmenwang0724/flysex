@@ -152,6 +152,34 @@ Higher scores mean stronger model evidence for male sex. Rank 1 means highest sc
 
 Check `run_summary.json` for the run configuration and actual coverage. Skipped or unavailable frames are not predictions.
 
+### Male positions
+
+`male_positions.csv` is the easiest file to read for where the males are. It has one row for every fly the model calls male (`score > 0.5`) at each scored frame.
+
+| Column | Meaning |
+|---|---|
+| `frame`, `well` | Input video frame number and well number |
+| `fly` | FlyTracker's label for this fly at this frame |
+| `x_mm`, `y_mm` | Position in millimetres from the top-left corner of the well's tracked region; y increases downward |
+| `score` | Model score, rounded to four decimals |
+| `confident` | True when the score is above 0.9 |
+| `rank` | Position among all flies in this frame, 1 being the highest score |
+| `x_px`, `y_px` | FlyTracker's `pos x` and `pos y`, unchanged |
+| `tracker_row` | Zero-based data row in the original tracker tables |
+
+Millimetres are the tracker pixels divided by that well's pixels-per-millimetre value from `calibration.mat`. Positions are two-dimensional because the recordings are filmed from above.
+
+Each frame is called on its own. A frame can have no male row, one, or several, and `run_summary.json` counts each well's frames by how many flies were called male. The `fly` label comes from FlyTracker and can move to a different animal between frames, so rows sharing a `fly` number are not necessarily the same animal. In a well known to hold one male, the male row at each frame is the model's estimate of that male's position. Keep rows with `confident == True` when a number has to be trusted.
+
+For results produced before this table existed, create it from the saved scores without rescoring:
+
+```bash
+python -m flysex positions \
+  --session /path/to/your-trial \
+  --scores results/trial/ranked_scores.csv \
+  --output results/trial/male_positions.csv
+```
+
 ## 6. Export ranked tracker tables
 
 Prediction creates scores and review images. Export is a separate command:

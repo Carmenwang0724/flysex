@@ -65,6 +65,16 @@ The accompanying `rank_coverage.csv` distinguishes these cases. Analyses that in
 
 Ranking gives relative order within a frame. An all-female well still has a rank 1, and two flies with nearly equal scores still have an ordering. Neither rank nor a high score establishes a persistent identity. In particular, joining successive rank-1 positions can join different animals.
 
+## Male positions
+
+`male_positions.csv` lists every fly whose sex call is male (`score > 0.5`) at each scored frame, with its position. It selects rows by the same score rule as the `sex` column and uses no count of how many males a well should hold, so a frame can have no row, one row, or several.
+
+Positions come from FlyTracker's `pos x` and `pos y`, which are measured in the tracker's pixel frame for that well: the origin is the top-left corner of the well's tracked region, x increases to the right, and y increases downward. `x_px` and `y_px` are those values unchanged. `x_mm` and `y_mm` divide them by the well's own pixels-per-millimetre value from `calibration.mat`, so the conversion is exact for each well rather than a shared plate average. Positions are two-dimensional because the recordings are filmed from above.
+
+The conversion was checked against FlyTracker's own `dist_to_wall`, which is reported in millimetres. Distances to the wall recomputed from these positions and each well's calibrated centre and radius agree in scale, with fitted slopes of 0.885 to 0.941 and correlations of 0.90 to 0.95 for wells 2, 3, and 6 of the July 14 recording; a pixel scale taken from the full still instead of the tracker frame would give a slope near 1.33 or 0.75. The remaining spread reflects approximating each well as a circle.
+
+Scores are rounded to four decimals and millimetre positions to two for readability. Ranks are taken from the unrounded scores before rounding, so two flies whose scores round to the same value keep their true order. `ranked_scores.csv` keeps full precision and remains the input for export.
+
 ## Held-out evaluation
 
 Validation holds out one recording date at a time: train on two dates and evaluate on the third. Splitting frames randomly would mix near-duplicate images of the same animals between training and evaluation.

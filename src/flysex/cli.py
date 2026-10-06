@@ -47,6 +47,27 @@ def make_parser():
         type=Path,
     )
 
+    # Define the male position command
+    positions = commands.add_parser(
+        name="positions",
+        help="Write the positions of flies scored as male",
+    )
+    positions.add_argument(
+        "--session",
+        required=True,
+        type=Path,
+    )
+    positions.add_argument(
+        "--scores",
+        required=True,
+        type=Path,
+    )
+    positions.add_argument(
+        "--output",
+        required=True,
+        type=Path,
+    )
+
     # Define the extraction command
     extract = commands.add_parser(
         name="extract",
@@ -99,6 +120,17 @@ def main():
                 output_directory=arguments.output,
             )
             print(f"Exported ranked tracker tables to {arguments.output}")
+        elif arguments.command == "positions":
+            import pandas as pd
+            from .positions import write_male_positions
+
+            # Write the positions of the flies called male
+            result = write_male_positions(
+                session_directory=arguments.session,
+                calls=pd.read_csv(filepath_or_buffer=arguments.scores),
+                output_path=arguments.output,
+            )
+            print(f"Saved {result['male_rows']} male positions to {arguments.output}")
         else:
             from .video import extract_stills
 

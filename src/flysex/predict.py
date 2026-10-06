@@ -10,6 +10,7 @@ import torch
 from . import __version__
 from .imaging import crop_flies, read_still, save_overlay, save_review_sheet
 from .model import load_models, predict_probabilities, select_device
+from .positions import count_male_calls, male_positions
 from .ranking import rank_scores
 from .session import (
     available_wells,
@@ -218,6 +219,7 @@ def score_well(config, well_number, networks, device, stills):
         "scored_frames": completed,
         "total_tracker_rows": len(tracks[0]),
         "skipped_frames": len(skipped),
+        "pixels_per_mm": pixels_per_mm,
     }
 
     # Return this well's scores, skipped frames, and coverage
@@ -230,6 +232,17 @@ def save_run(config, rows, skipped, summaries, model_records, device):
     ranked = rank_scores(calls=pd.DataFrame(data=rows))
     ranked.to_csv(
         path_or_buf=config.output_directory / "ranked_scores.csv",
+        index=False,
+    )
+
+    # Save the positions of the flies called male
+    scales = {summary["well"]: summary["pixels_per_mm"] for summary in summaries}
+    positions = male_positions(
+        calls=ranked,
+        pixels_per_mm=scales,
+    )
+    positions.to_csv(
+        path_or_buf=config.output_directory / "male_positions.csv",
         index=False,
     )
 
@@ -252,6 +265,8 @@ def save_run(config, rows, skipped, summaries, model_records, device):
         "wells": summaries,
         "scored_flies": len(ranked),
         "confident_share": float(ranked["confident"].mean()),
+        "male_rows": len(positions),
+        "male_calls": count_male_calls(calls=ranked),
         "ranking": "descending score; ties use original fly ID; no fixed male count",
         "tracker_row_formula": "frame - frame_zero",
     }

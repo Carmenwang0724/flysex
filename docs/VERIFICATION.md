@@ -2,6 +2,16 @@
 
 Checked locally on macOS with CPU inference. This is a software migration check, not a new model accuracy estimate.
 
+## Male position table
+
+Added `male_positions.csv` and the `positions` command. The model, scores, ranking, and export are unchanged.
+
+- All 44 automated tests passed, the 30 existing tests and 14 new ones covering per-well scaling, rounding without reordering, unchanged score tables, frames with no or several male calls, invalid scales, and refusal to overwrite.
+- Rerunning the five-still preview for wells 2 and 6 reproduced `ranked_scores.csv` byte for byte, so existing outputs are unaffected.
+- The table written during prediction and the table written by `positions` from the saved scores were byte-identical.
+- All 14 male rows in that preview were checked against the source FlyTracker tables: every `x_px` and `y_px` equals `pos x` and `pos y` at the listed `tracker_row`, and every millimetre value equals that position divided by its own well's calibration.
+- The millimetre scale was checked against FlyTracker's `dist_to_wall`, as described in the methods.
+
 ## Code style and installation audit
 
 The Python source, tests, and all three research notebooks were audited together. Project configuration names now use lowercase `snake_case`. Functions have one-sentence docstrings, logical blocks have operation comments, and multi-argument calls are expanded. External API names and saved data field names are preserved.

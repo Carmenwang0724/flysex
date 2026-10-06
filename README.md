@@ -39,6 +39,7 @@ python -m flysex export \
 
 | Output | Purpose |
 |---|---|
+| `male_positions.csv` | Each fly called male at each frame, with its position in millimetres and tracker pixels |
 | `ranked_scores.csv` | Every scored fly, its original tracker ID, model score, and rank within that well and frame |
 | Preview contact sheets and overlays | Check crop quality and whether tracker positions match the stills |
 | `run_summary.json` | Record the run configuration and coverage |
@@ -51,6 +52,8 @@ In exported tables, `fly1.csv` holds the highest-scoring fly at a scored row, `f
 **Downstream analyses using ranked tracker tables must filter by `rank_coverage.csv` where `ranked == True`.** Unscored rows retain their original tracker order. The exporter does not fill gaps or carry a ranking forward between sampled frames.
 
 The optional sex call (`score > 0.5`) and confidence flag (`score < 0.1` or `score > 0.9`) describe individual predictions. They do not select flies or change their ranking.
+
+`male_positions.csv` lists the flies called male by that same score rule, one row per fly per frame, with `x_mm` and `y_mm` converted using each well's own calibration. It uses no male count, so a frame can have no row or several. For results saved before this table existed, create it with `python -m flysex positions`; the [quickstart](docs/QUICKSTART.md#male-positions) describes the columns.
 
 ## Model evidence
 

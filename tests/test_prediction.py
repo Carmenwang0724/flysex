@@ -314,6 +314,70 @@ class PredictionTests(unittest.TestCase):
             second=len(ranked),
         )
 
+    def test_run_saves_male_positions_in_millimetres(self):
+        """Check the run writes male positions scaled by the calibration value."""
+        # Run the prediction with one unreadable still
+        self.start_patch(
+            name="index_stills",
+            return_value=self.stills(frames=[120, 121, 123]),
+        )
+        self.start_patch(
+            name="load_models",
+            return_value=([], []),
+        )
+        self.read_image.side_effect = [self.image, OSError("broken PNG"), self.image]
+        summary = run_prediction(config=self.config)
+        positions = pd.read_csv(
+            filepath_or_buffer=self.config.output_directory / "male_positions.csv"
+        )
+        saved_summary = json.loads(
+            s=(self.config.output_directory / "run_summary.json").read_text()
+        )
+
+        # Check the rows, pixel pass-through, and millimetre conversion
+        self.assertEqual(
+            first=positions["frame"].tolist(),
+            second=[120, 123],
+        )
+        self.assertEqual(
+            first=positions["fly"].tolist(),
+            second=[2, 2],
+        )
+        self.assertEqual(
+            first=positions["x_px"].tolist(),
+            second=[220.0, 223.0],
+        )
+        np.testing.assert_allclose(
+            actual=positions["x_mm"].to_numpy(),
+            desired=[round(220 / 15.7, 2), round(223 / 15.7, 2)],
+        )
+        np.testing.assert_allclose(
+            actual=positions["y_mm"].to_numpy(),
+            desired=[round(120 / 15.7, 2), round(123 / 15.7, 2)],
+        )
+
+        # Check the saved counts and scale
+        self.assertEqual(
+            first=summary["male_rows"],
+            second=2,
+        )
+        self.assertEqual(
+            first=saved_summary["male_calls"],
+            second=[
+                {
+                    "well": 2,
+                    "scored_frames": 2,
+                    "frames_with_no_male": 0,
+                    "frames_with_one_male": 2,
+                    "frames_with_two_or_more": 0,
+                }
+            ],
+        )
+        self.assertEqual(
+            first=saved_summary["wells"][0]["pixels_per_mm"],
+            second=15.7,
+        )
+
 
 # Run the test suite
 if __name__ == "__main__":
